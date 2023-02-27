@@ -17,19 +17,9 @@ class EventAPITestCase(APITestCase):
     def test_event_create(self):
         url = reverse('event-create')
 
-        file = BytesIO()
-        Image.new('RGB', (100, 100)).save(file, 'jpeg')
-        file.name = 'test_image.jpg'
-        file.seek(0)
-        image_file = SimpleUploadedFile(
-            name='test_image.jpg',
-            content=file.read(),
-            content_type='image/jpeg'
-        )
-
         data = {'title': 'Test Event', 'description': 'Test Description', 'type': 'Competition',
                 'location': 'Test Location', 'starts_on': datetime.now(tz=timezone.utc),
-                'finishes_on': (datetime.now(tz=timezone.utc)), 'points': 10, 'image': image_file}
+                'finishes_on': (datetime.now(tz=timezone.utc)), 'points': 10, 'image': "https://image_url.jpg"}
 
         serializer = EventCreateSerializer(data=data)
         self.assertTrue(serializer.is_valid())

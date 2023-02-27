@@ -12,8 +12,8 @@ class ReportAPITestCase(APITestCase):
                                          middle_name='Omar', last_name='Doe', grade=5,
                                          live_points=100, points=200, rank=1)
         event = Event.objects.create(title='Test Event', description='Test description', type='Competition',
-                                     location='Test location', starts_on='2023-02-25 08:00:00',
-                                     finishes_on='2023-02-25 10:00:00', points=50)
+                                     location='Test location', starts_on='2023-02-25 08:00:00+00:00',
+                                     finishes_on='2023-02-25 10:00:00+00:00', points=50)
         Attendance.objects.create(student=student, event=event)
 
         url = reverse('report-create')

@@ -1,6 +1,4 @@
 import datetime
-from PIL import Image
-from io import BytesIO
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -191,23 +189,13 @@ class StudentTestCase(APITestCase):
             email='test@example.com',
         )
 
-        file = BytesIO()
-        Image.new('RGB', (100, 100)).save(file, 'jpeg')
-        file.name = 'test_image.jpg'
-        file.seek(0)
-        image_file = SimpleUploadedFile(
-            name='test_image.jpg',
-            content=file.read(),
-            content_type='image/jpeg'
-        )
-
         updated_data = {
             'first_name': 'Jane',
             'middle_name': 'A.',
             'last_name': 'Doe',
             'biography': 'Updated biography',
             'grade': 6,
-            'image': image_file
+            'image': 'https://image_url.jpg'
         }
 
         url = reverse('student-update', kwargs={'pk': student.pk})
