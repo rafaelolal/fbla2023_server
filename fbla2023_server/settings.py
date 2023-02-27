@@ -26,7 +26,12 @@ SECRET_KEY = 'django-insecure-^xh20n4l4*5k-6=cr(77$m-ps9%c0z(4hgc0^s*r_u^!jm+i!8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["ralmeida.dev", "127.0.0.1"]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://ralmeida.dev",
+    "http://localhost:3000",
+]
 
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = '/media/'
@@ -36,6 +41,7 @@ MEDIA_URL = '/media/'
 INSTALLED_APPS = [
     'core',
     'rest_framework',
+    'corsheaders',
     'django_archive',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,6 +55,7 @@ ARCHIVE_DIRECTORY = 'archive/'
 ARCHIVE_FORMAT = archivers.ZIP
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
