@@ -3,11 +3,11 @@ from django.db.models.fields import BooleanField, CharField, TextField, DateFiel
 
 
 class Admin(Model):
-    id = CharField(max_length=20, primary_key=True)
+    id = CharField(max_length=28, primary_key=True)
 
 
 class Student(Model):
-    id = CharField(max_length=20, primary_key=True)
+    id = CharField(max_length=28, primary_key=True)
     email = CharField(max_length=320, unique=True)
     first_name = CharField(max_length=30, blank=True, null=True)
     middle_name = CharField(max_length=30, blank=True, null=True)
@@ -16,8 +16,8 @@ class Student(Model):
     grade = PositiveSmallIntegerField(
         choices=[(5, 5), (6, 6), (7, 7), (8, 8)],
         blank=True, null=True)
-    image = ImageField(upload_to='images/students/',
-                       default='/images/students/default.jpg', null=True)
+    image = CharField(
+        max_length=512, default='https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg')
     live_points = PositiveSmallIntegerField(default=0)
 
     points = PositiveSmallIntegerField(default=0)
@@ -34,7 +34,7 @@ class Event(Model):
     location = CharField(max_length=64)
     starts_on = DateTimeField(auto_now=False, auto_now_add=False)
     finishes_on = DateTimeField(auto_now=False, auto_now_add=False)
-    image = ImageField(upload_to='images/events/')
+    image = CharField(max_length=36)
     points = PositiveSmallIntegerField()
     is_canceled = BooleanField(default=False)
     cancellation_reason = TextField(max_length=1024, blank=True, null=True)
@@ -50,11 +50,11 @@ class Attendance(Model):
 class News(Model):
     title = CharField(max_length=256)
     content = TextField(max_length=16384)
-    created_on = DateTimeField(auto_now_add=True)
+    created_on = DateTimeField(auto_now=False, auto_now_add=True)
 
 
 class Report(Model):
-    created_on = DateField(auto_now_add=True)
+    created_on = DateField(auto_now=False, auto_now_add=True)
     first_name = CharField(max_length=30)
     middle_name = CharField(max_length=30)
     last_name = CharField(max_length=30)
@@ -64,12 +64,12 @@ class Report(Model):
         blank=True, null=True)
 
 
-class Leaderboard(Model):
-    created_on = DateField(auto_now=False, auto_now_add=False)
-
-
 class Rally(Model):
     starts_on = DateTimeField(auto_now=False, auto_now_add=False)
+
+
+class Leaderboard(Model):
+    created_on = DateField(auto_now=True)
 
 
 class Prize(Model):
