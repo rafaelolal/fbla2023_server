@@ -26,15 +26,15 @@ SECRET_KEY = 'django-insecure-^xh20n4l4*5k-6=cr(77$m-ps9%c0z(4hgc0^s*r_u^!jm+i!8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = '/media/'
+
 ALLOWED_HOSTS = ["ralmeida.dev", "127.0.0.1"]
 
 CORS_ALLOWED_ORIGINS = [
     "https://ralmeida.dev",
     "http://localhost:3000",
 ]
-
-MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = '/media/'
 
 # Application definition
 
@@ -53,6 +53,20 @@ INSTALLED_APPS = [
 
 ARCHIVE_DIRECTORY = 'archive/'
 ARCHIVE_FORMAT = archivers.ZIP
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
+    ],
+
+    'DEFAULT_PARSER_CLASSES': [
+        'djangorestframework_camel_case.parser.CamelCaseFormParser',
+        'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+    ],
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
