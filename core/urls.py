@@ -10,10 +10,12 @@ urlpatterns = [
 
     path('attendance/create/', AttendanceCreateView.as_view(),
          name='attendance-create'),
-    path('attendance/<int:pk>/update',
+    path('attendance/<int:pk>/update/',
          AttendanceUpdateView.as_view(), name='attendance-update'),
     path('attendances/<int:event>/dashboard/',
          AttendanceDashboardListView.as_view(), name='attendance-dashboard-list'),
+    path('attendance/<int:pk>/destroy/',
+         AttendanceDestroyView.as_view(), name='attendance-destroy'),
 
     path('event/create/', EventCreateView.as_view(), name='event-create'),
     path('events/', EventListView.as_view(), name='event-list'),
@@ -38,7 +40,7 @@ urlpatterns = [
     path('rally/<int:pk>/update/', RallyUpdateView.as_view(), name='rally-update'),
 
     path('report/create/', report_create_view, name='report-create'),
-    path('reports', report_list_view, name='report-list'),
+    path('reports/', report_list_view, name='report-list'),
     path('report/<str:created_on>/', report_retrieve_view, name='report-retrieve'),
 
     path('student/create/', StudentCreateView.as_view(), name='student-create'),
@@ -47,7 +49,7 @@ urlpatterns = [
          name='student-leaderboard-list'),
     path('student/<str:pk>/', StudentRetrieveView.as_view(),
          name='student-retrieve'),
-    path('student/<str:pk>/events/', StudentEventsListView.as_view(),
+    path('student/<str:pk>/events/', StudentEventListView.as_view(),
          name='student-events-list'),
     path('student/<str:pk>/update/',
          StudentUpdateView.as_view(), name='student-update'),
