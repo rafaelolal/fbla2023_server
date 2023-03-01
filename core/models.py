@@ -1,9 +1,12 @@
-from django.db.models import Model, ForeignKey, ImageField, CASCADE
+from django.db.models import Model, ForeignKey, CASCADE
 from django.db.models.fields import BooleanField, CharField, TextField, DateField, PositiveSmallIntegerField, DateTimeField
 
 
 class Admin(Model):
     id = CharField(max_length=28, primary_key=True)
+
+    def __str__(self):
+        return f"{self.pk}"
 
 
 class Student(Model):
@@ -23,6 +26,15 @@ class Student(Model):
     points = PositiveSmallIntegerField(default=0)
     rank = PositiveSmallIntegerField(blank=True, null=True, unique=True)
 
+    def get_name(self):
+        if all([self.first_name, self.middle_name, self.last_name]):
+            return f"{self.first_name[0]}. {self.middle_name[0]}. {self.last_name}"
+        else:
+            return f"{self.email}"
+
+    def __str__(self):
+        return f"{self.pk}: {self.get_name()}"
+
 
 class Event(Model):
     title = CharField(max_length=256)
@@ -36,8 +48,13 @@ class Event(Model):
     finishes_on = DateTimeField(auto_now=False, auto_now_add=False)
     image = CharField(max_length=36)
     points = PositiveSmallIntegerField()
-    is_canceled = BooleanField(default=False)
     cancellation_reason = TextField(max_length=1024, blank=True, null=True)
+
+    def __str__(self):
+        s = f"{self.pk}: "
+        s += 'Canceled' if self.cancellation_reason else ''
+        s += f"{self.title[:15]}..."
+        return s
 
 
 class Attendance(Model):
@@ -46,11 +63,17 @@ class Attendance(Model):
     attended = BooleanField(blank=True, null=True)
     final = BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.pk}: {self.student.get_name()} on {self.event.title[:15]}..."
+
 
 class News(Model):
     title = CharField(max_length=256)
     content = TextField(max_length=16384)
     created_on = DateTimeField(auto_now=False, auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.pk}: {self.title[:15]}..."
 
 
 class Report(Model):
@@ -63,16 +86,28 @@ class Report(Model):
         choices=[(5, 5), (6, 6), (7, 7), (8, 8)],
         blank=True, null=True)
 
+    def __str__(self):
+        return f"{self.pk}: {self.first_name[0]}. {self.middle_name[0]}. {self.last_name} on {self.created_on}"
+
 
 class Rally(Model):
     starts_on = DateTimeField(auto_now=False, auto_now_add=False)
 
+    def __str__(self):
+        return f"{self.pk}: {self.starts_on}"
+
 
 class Leaderboard(Model):
     created_on = DateField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.pk}: {self.created_on}"
 
 
 class Prize(Model):
     type = CharField(choices=[("School", "School"),
                      ("Food", "Food"), ("Spirit", "Spirit")], max_length=6)
     student = ForeignKey(Student, related_name="prizes", on_delete=CASCADE)
+
+    def __str__(self):
+        return f"{self.pk}: {self.student.get_name()}, {self.type}"
