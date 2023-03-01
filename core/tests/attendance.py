@@ -29,7 +29,6 @@ class AttendanceTestCase(APITestCase):
             starts_on=datetime.now(tz=timezone.utc),
             finishes_on=datetime.now(tz=timezone.utc) + timedelta(hours=1),
             points=10,
-            is_canceled=False,
         )
 
         url = reverse('attendance-create')
@@ -41,15 +40,6 @@ class AttendanceTestCase(APITestCase):
         self.assertEqual(response.data, serializer.data)
 
     def test_attendance_update(self):
-        student = Student.objects.create(
-            id='123',
-            email='test@test.com',
-            first_name='John',
-            last_name='Doe',
-            live_points=10,
-            points=20,
-            rank=1,
-        )
         event = Event.objects.create(
             title='Test Event',
             description='This is a test event.',
@@ -58,17 +48,39 @@ class AttendanceTestCase(APITestCase):
             starts_on=datetime.now(tz=timezone.utc),
             finishes_on=datetime.now(tz=timezone.utc) + timedelta(hours=1),
             points=10,
-            is_canceled=False,
         )
-        attendance = Attendance.objects.create(student=student, event=event)
+        student1 = Student.objects.create(
+            id='123',
+            email='test@test.com',
+        )
+        student2 = Student.objects.create(
+            id='1234',
+            email='tes44t@test.com',
+            live_points=event.points
+        )
+        attendance1 = Attendance.objects.create(student=student1, event=event)
+        attendance2 = Attendance.objects.create(
+            student=student2, event=event, attended=True)
 
-        url = reverse('attendance-update', kwargs={'pk': attendance.pk})
+        url = reverse('attendance-update', kwargs={'pk': attendance1.pk})
         data = {'attended': True}
         response = self.client.patch(url, data)
         self.assertEqual(response.status_code, 200)
-        attendance.refresh_from_db()
-        serializer = AttendanceUpdateSerializer(attendance)
+        attendance1.refresh_from_db()
+        serializer = AttendanceUpdateSerializer(attendance1)
         self.assertEqual(response.data, serializer.data)
+        student1.refresh_from_db()
+        self.assertEqual(student1.live_points, event.points)
+
+        url = reverse('attendance-update', kwargs={'pk': attendance2.pk})
+        data = {'attended': False}
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, 200)
+        attendance2.refresh_from_db()
+        serializer = AttendanceUpdateSerializer(attendance2)
+        self.assertEqual(response.data, serializer.data)
+        student2.refresh_from_db()
+        self.assertEqual(student2.live_points, 0)
 
     def test_attendance_dashboard_list(self):
         student = Student.objects.create(
@@ -88,9 +100,8 @@ class AttendanceTestCase(APITestCase):
             starts_on=datetime.now(tz=timezone.utc),
             finishes_on=datetime.now(tz=timezone.utc) + timedelta(hours=1),
             points=10,
-            is_canceled=False,
         )
-        attendance = Attendance.objects.create(
+        Attendance.objects.create(
             student=student, event=event)
 
         url = reverse('attendance-dashboard-list', kwargs={'event': event.pk})
@@ -100,3 +111,14 @@ class AttendanceTestCase(APITestCase):
         serializer = AttendanceDashboardListSerializer(
             attendance_list, many=True)
         self.assertEqual(response.data, serializer.data)
+
+    def test_attendance_destroy(self):
+        student = Student.objects.create(id='test id', email="test@email.com")
+        event = Event.objects.create(title='Test Event', description='Test Description', type='Competition',
+                                     location='Test Location', starts_on=datetime.now(tz=timezone.utc), finishes_on=datetime.now(tz=timezone.utc),
+                                     points=10)
+        attendance = Attendance.objects.create(student=student, event=event)
+        url = reverse('attendance-destroy', kwargs={'pk': attendance.pk})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(Attendance.objects.filter(pk=attendance.pk).exists())

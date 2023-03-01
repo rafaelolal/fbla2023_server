@@ -28,7 +28,7 @@ class StudentRetrieveView(RetrieveAPIView):
     serializer_class = StudentRetrieveSerializer
 
 
-class StudentEventsListView(RetrieveAPIView):
+class StudentEventListView(RetrieveAPIView):
     """Lists Student events."""
     queryset = Student.objects.all()
     serializer_class = StudentEventListSerializer

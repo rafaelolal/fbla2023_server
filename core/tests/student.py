@@ -1,9 +1,9 @@
-import datetime
+from datetime import datetime, timedelta
+from django.utils import timezone
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from django.core.files.uploadedfile import SimpleUploadedFile
-from ..models import Attendance, Event, Student
+from ..models import Attendance, Event, Student, Prize
 from ..serializers.student import (StudentCreateSerializer, StudentListSerializer,
                                    StudentLeaderboardListSerializer,
                                    StudentRetrieveSerializer, StudentEventListSerializer,
@@ -144,6 +144,9 @@ class StudentTestCase(APITestCase):
         self.assertEqual(response.data, serializer.data)
 
     def test_retrieve_student(self):
+        event = Event.objects.create(title='Test Event 1', description='Test Description', type='Competition',
+                                     location='Test Location', starts_on=datetime.now(tz=timezone.utc) - timedelta(hours=1), finishes_on=datetime.now(tz=timezone.utc) - timedelta(hours=1),
+                                     points=10)
         student = Student.objects.create(
             id='123',
             email='test@example.com',
@@ -153,19 +156,24 @@ class StudentTestCase(APITestCase):
             biography='Lorem ipsum',
             grade=5
         )
+        Attendance.objects.create(student=student, event=event)
+        Prize.objects.create(student=student, type="Food")
+        student.refresh_from_db()
 
         url = reverse('student-retrieve', kwargs={'pk': student.pk})
         serializer = StudentRetrieveSerializer(student)
 
         response = self.client.get(url, format='json')
-        # response.data contains the URL while serializer.data contains the path
-        response.data['image'] = response.data['image'].replace(
-            'http://testserver', '')
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
 
     def test_list_student_events(self):
+        event1 = Event.objects.create(pk=100, title='Test Event', description='Test Description', type='Competition',
+                                      location='Test Location', starts_on=datetime.now(tz=timezone.utc), finishes_on=datetime.now(tz=timezone.utc),
+                                      points=10)
+        event2 = Event.objects.create(pk=101, title='Test Event 2', description='Test Description', type='Competition',
+                                      location='Test Location', starts_on=datetime.now(tz=timezone.utc), finishes_on=datetime.now(tz=timezone.utc),
+                                      points=10)
         student = Student.objects.create(
             id='123',
             email='test@example.com',
@@ -174,11 +182,17 @@ class StudentTestCase(APITestCase):
             last_name='Smith',
             grade=5
         )
+        Attendance.objects.create(student=student, event=event1)
+        Attendance.objects.create(student=student, event=event2)
+
+        student.refresh_from_db()
 
         url = reverse('student-events-list', kwargs={'pk': student.pk})
         serializer = StudentEventListSerializer(student)
 
         response = self.client.get(url, format='json')
+
+        print(response.data, "attendances data")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
