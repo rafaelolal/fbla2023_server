@@ -34,11 +34,11 @@ def delete_all_objects():
 
 
 def create_students():
-    ids = ['EPJsyOiPOMPJH7uy90BFUWfICCB2', 'P3g0EkZZfiR6dfW7aMnxV4blQ8s2',
-           'wODmBVP1OuUATwyhzdwk5Xtjt9K2', 'vr5et02dk2STp0J6zpE30cPUFkV2',
-           'mklzxlsecIcdxmAHSXcndSsCy213', 'J4JMWTKwS9dmM2ulDlYmn0o9gJN2',
-           'h8z5G0FgnyX6Zn2sMQNv7IgczI92', 'YYW0xRkaT3QC3Ex550kpuuwlj5b2',
-           '51moiXQZjAXp7mHpnUGzopnVI1Y2', 'oGPpPEUloOQRgC5c93H7u3dlwBw2']
+    ids = ['oGPpPEUloOQRgC5c93H7u3dlwBw2', 'EPJsyOiPOMPJH7uy90BFUWfICCB2',
+           'P3g0EkZZfiR6dfW7aMnxV4blQ8s2', 'wODmBVP1OuUATwyhzdwk5Xtjt9K2',
+           'vr5et02dk2STp0J6zpE30cPUFkV2', 'mklzxlsecIcdxmAHSXcndSsCy213',
+           'J4JMWTKwS9dmM2ulDlYmn0o9gJN2', 'h8z5G0FgnyX6Zn2sMQNv7IgczI92',
+           'YYW0xRkaT3QC3Ex550kpuuwlj5b2', '51moiXQZjAXp7mHpnUGzopnVI1Y2', ]
 
     for i, id in enumerate(ids):
         Student(id=id, email=f"student{i}@test.com").save()
@@ -49,17 +49,21 @@ def create_events(n=10):
     locations = ['Auditorium', 'Gymnasium',
                  'Outdoor Court', 'Cafeteria', 'Main Field']
 
-    for _ in range(n):
-        start_delta = datetime.timedelta(hours=random.randint(0, 24*30))
+    for i in range(n):
+        if i % 2 == 0:
+            start_delta = datetime.timedelta(hours=random.randint(0, 24*7))
+        else:
+            start_delta = datetime.timedelta(hours=random.randint(-24*7, -3))
+
         starts_on = datetime.datetime.now(tz=timezone.utc) + start_delta
-        Event(title=f.paragraph(nb_sentences=1, variable_nb_sentences=False),
+        Event(title=f.paragraph(nb_sentences=1, variable_nb_sentences=False)[:-1],
               description=f.paragraph(
                   nb_sentences=3, variable_nb_sentences=False),
               type=random.choice(types),
               location=random.choice(locations),
               starts_on=starts_on,
               finishes_on=starts_on +
-              datetime.timedelta(hours=random.randint(0, 3)),
+              datetime.timedelta(hours=random.randint(1, 3)),
               image=f.image_url(
                   placeholder_url=f"https://picsum.photos/seed/{random.randint(10000, 99999)}/300"),
               points=random.randint(50, 100)).save()
@@ -70,19 +74,22 @@ def create_attendance(n=5):
         events = random.sample(
             [e.pk for e in Event.objects.all()], random.randint(1, n))
         for event in events:
-            Attendance(student=student, event=Event.objects.get(pk=event),
-                       attended=random.choice((True, False, None))).save()
+            event_object = Event.objects.get(pk=event)
+            attended = random.choice(
+                (True, False)) if event_object.finishes_on < datetime.datetime.now(tz=timezone.utc) else None
+            Attendance(student=student, event=event_object,
+                       attended=attended).save()
 
 
 def create_news(n=5):
     for _ in range(n):
         content = ""
         for _ in range(random.randint(1, 5)):
-            content += f"### {f.paragraph(nb_sentences=1, variable_nb_sentences=False)}\n\n"
+            content += f"### {f.paragraph(nb_sentences=1, variable_nb_sentences=False)[:-1]}\n\n"
             for _ in range(random.randint(2, 5)):
                 content += f"{f.paragraph(nb_sentences=5)}\n\n"
         news = News(title=f.paragraph(nb_sentences=1,
-                                      variable_nb_sentences=False), content=content)
+                                      variable_nb_sentences=False)[:-1], content=content)
         news.created_on = datetime.datetime.now(
         ) - datetime.timedelta(days=random.randint(1, 7))
         news.save()
