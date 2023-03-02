@@ -1,7 +1,13 @@
 """All Rally API views."""
-from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView
 from ..serializers.rally import *
 from ..models import Rally
+
+
+class RallyRetrieveView(RetrieveAPIView):
+    """Retrieves a Rally."""
+    queryset = Rally.objects.all()
+    serializer_class = RallySerializer
 
 
 class RallyUpdateView(UpdateAPIView):

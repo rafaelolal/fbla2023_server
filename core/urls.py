@@ -37,6 +37,7 @@ urlpatterns = [
     path('prize/create/', PrizeCreateView.as_view(), name='prize-create'),
     path('prizes/<str:student>/', PrizeListView.as_view(), name='prize-list'),
 
+    path('rally/<int:pk>/', RallyRetrieveView.as_view(), name='rally-retrieve'),
     path('rally/<int:pk>/update/', RallyUpdateView.as_view(), name='rally-update'),
 
     path('report/create/', report_create_view, name='report-create'),

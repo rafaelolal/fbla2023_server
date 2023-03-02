@@ -192,8 +192,6 @@ class StudentTestCase(APITestCase):
 
         response = self.client.get(url, format='json')
 
-        print(response.data, "attendances data")
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
 

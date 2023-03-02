@@ -8,6 +8,16 @@ from ..serializers.rally import RallySerializer
 
 
 class RallyTests(APITestCase):
+    def test_retrieve_student(self):
+        rally = Rally.objects.create(starts_on=datetime.now(tz=timezone.utc))
+
+        url = reverse('rally-retrieve', kwargs={'pk': 1})
+        serializer = RallySerializer(rally)
+
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, serializer.data)
+
     def test_update_rally_starts_on(self):
         now = datetime.now(tz=timezone.utc)
         rally = Rally.objects.create(starts_on=now)

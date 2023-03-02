@@ -21,6 +21,9 @@ class StudentLeaderboardListView(ListAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentLeaderboardListSerializer
 
+    def get_queryset(self):
+        return Student.objects.all().order_by('-points')
+
 
 class StudentRetrieveView(RetrieveAPIView):
     """Retrieves a Student."""
