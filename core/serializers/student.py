@@ -23,7 +23,7 @@ class StudentLeaderboardListSerializer(serializers.ModelSerializer):
     """Used by Student leaderboard list view."""
     class Meta:
         model = Student
-        fields = ['email', 'first_name', 'middle_name',
+        fields = ['email', 'image', 'first_name', 'middle_name',
                   'last_name', 'points', 'rank']
 
 
