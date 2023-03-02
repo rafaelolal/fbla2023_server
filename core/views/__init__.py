@@ -1,7 +1,7 @@
 from .admin import AdminCreateView, AdminRetrieveView
 from .attendance import AttendanceCreateView, AttendanceUpdateView, AttendanceDashboardListView, AttendanceDestroyView
 from .event import EventCreateView, EventListView, EventDestroyView, EventCancelUpdateView, EventDashboardListView
-from .leaderboard import LeaderboardUpdateView
+from .leaderboard import LeaderboardUpdateView, LeaderboardRetrieveView
 from .news import NewsListView, NewsCreateView, NewsDestroyView, NewsRetrieveView
 from .prize import PrizeListView, PrizeCreateView
 from .rally import RallyUpdateView, RallyRetrieveView

@@ -3,9 +3,20 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from ..models import Student, Leaderboard
+from ..serializers.leaderboard import LeaderboardRetrieveSerializer
 
 
 class LeaderboardTests(APITestCase):
+
+    def test_retrieve_leaderboard(self):
+        leaderboard = Leaderboard.objects.create()
+
+        url = reverse('leaderboard-retrieve', kwargs={'pk': 1})
+        serializer = LeaderboardRetrieveSerializer(leaderboard)
+
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, serializer.data)
 
     def test_leaderboard_update_view(self):
         leaderboard = Leaderboard.objects.create(created_on='2022-02-24')

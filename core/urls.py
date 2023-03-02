@@ -28,6 +28,8 @@ urlpatterns = [
 
     path('leaderboard/<int:pk>/update/',
          LeaderboardUpdateView.as_view(), name='leaderboard-update'),
+    path('leaderboard/<int:pk>/',
+         LeaderboardRetrieveView.as_view(), name='leaderboard-retrieve'),
 
     path('news/create/', NewsCreateView.as_view(), name='news-create'),
     path('news/', NewsListView.as_view(), name='news-list'),

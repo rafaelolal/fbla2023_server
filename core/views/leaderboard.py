@@ -1,8 +1,14 @@
 """All Leaderboard API views."""
 from datetime import date
-from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView
 from ..serializers.leaderboard import *
 from ..models import Leaderboard, Student
+
+
+class LeaderboardRetrieveView(RetrieveAPIView):
+    """Retrieves a Leaderboard."""
+    queryset = Leaderboard.objects.all()
+    serializer_class = LeaderboardRetrieveSerializer
 
 
 class LeaderboardUpdateView(UpdateAPIView):
@@ -11,14 +17,20 @@ class LeaderboardUpdateView(UpdateAPIView):
     serializer_class = LeaderboardUpdateSerializer
 
     def put(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.created_on = date.today()
-        instance.save()
+        response = super().put(request, *args, **kwargs)
+
         students = Student.objects.all().order_by('-live_points')
+        # removing student ranks to avoid unique constraint error
+        for student in students:
+            student.rank = None
+            student.save()
+
         for i, student in enumerate(students, 1):
             student.rank = i
             student.points = student.live_points
             student.save()
 
-        response = super().put(request, *args, **kwargs)
+        # cannot save in the above loop because
+        # ranks must be unique
+
         return response
