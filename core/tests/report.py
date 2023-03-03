@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from ..models import Report, Student, Event, Attendance
+from ..models import Report, Student, Event, Attendance, Leaderboard
 from ..serializers.report import ReportSerializer
 
 
@@ -15,6 +15,7 @@ class ReportAPITestCase(APITestCase):
                                      location='Test location', starts_on='2023-02-25 08:00:00+00:00',
                                      finishes_on='2023-02-25 10:00:00+00:00', points=50)
         Attendance.objects.create(student=student, event=event)
+        Leaderboard.objects.create()
 
         url = reverse('report-create')
         response = self.client.post(url)

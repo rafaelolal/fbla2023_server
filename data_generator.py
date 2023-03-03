@@ -12,12 +12,13 @@ if True:
     from django import setup
     setup()
     from django.utils import timezone
-    from core.models import Student, Event, Attendance, News, Prize, Leaderboard, Rally
+    from core.models import Student, Event, Attendance, News, Prize, Leaderboard, Rally, Report, Admin
 
 
 def create_all():
     create_functions = [create_students, create_events, create_attendance,
-                        create_news, create_prizes, create_or_update_leaderboard, create_or_update_rally]
+                        create_news, create_prizes, create_or_update_leaderboard,
+                        create_or_update_rally, create_reports, create_admin]
 
     print("Started creating")
     for fun in create_functions:
@@ -27,13 +28,14 @@ def create_all():
 
 def delete_all_objects():
     print("Started deleting all objects")
-    models = [Student, Event, Attendance, News, Prize]
+    models = [Student, Event, Attendance, News, Prize, Report]
     for model in models:
         model.objects.all().delete()
     print("Finished deleting all objects")
 
 
 def create_students():
+    # ids must be in this specific order
     ids = ['oGPpPEUloOQRgC5c93H7u3dlwBw2', 'EPJsyOiPOMPJH7uy90BFUWfICCB2',
            'P3g0EkZZfiR6dfW7aMnxV4blQ8s2', 'wODmBVP1OuUATwyhzdwk5Xtjt9K2',
            'vr5et02dk2STp0J6zpE30cPUFkV2', 'mklzxlsecIcdxmAHSXcndSsCy213',
@@ -90,8 +92,9 @@ def create_news(n=5):
                 content += f"{f.paragraph(nb_sentences=5)}\n\n"
         news = News(title=f.paragraph(nb_sentences=1,
                                       variable_nb_sentences=False)[:-1], content=content)
-        news.created_on = datetime.datetime.now(
-        ) - datetime.timedelta(days=random.randint(1, 7))
+        news.save()
+        news.created_on = datetime.datetime.now(tz=timezone.utc
+                                                ) - datetime.timedelta(days=random.randint(1, 7))
         news.save()
 
 
@@ -106,8 +109,10 @@ def create_or_update_rally():
     starts_on = datetime.datetime.now(
         tz=timezone.utc) + datetime.timedelta(days=30)
     if len(Rally.objects.all()) == 0:
+        print("Created rally")
         Rally(starts_on=starts_on).save()
     else:
+        print("Updated rally")
         rally = Rally.objects.get()
         rally.starts_on = starts_on
         rally.save()
@@ -116,6 +121,7 @@ def create_or_update_rally():
 def create_or_update_leaderboard():
     calculate_live_points()
     if len(Leaderboard.objects.all()) == 0:
+        print("Created leaderboard")
         Leaderboard().save()
     students = Student.objects.all().order_by('-live_points')
     for i, student in enumerate(students, 1):
@@ -130,6 +136,23 @@ def calculate_live_points():
             if attendance.attended:
                 student.live_points += attendance.event.points
         student.save()
+
+
+def create_reports(n=5):
+    for d in range(n):
+        created_on = datetime.date.today() - datetime.timedelta(days=d*5)
+        for student in Student.objects.all():
+            report = Report(first_name=student.email,
+                            points=random.randint(0, 100))
+            report.save()
+            report.created_on = created_on
+            report.save()
+
+
+def create_admin():
+    if len(Admin.objects.all()) == 0:
+        print("Created admin")
+        Admin(pk="ubdAzZeNbHca1S1Gaeq0iKOGwuv1")
 
 
 f = Faker('en_US')

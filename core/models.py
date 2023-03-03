@@ -70,17 +70,17 @@ class Attendance(Model):
 class News(Model):
     title = CharField(max_length=256)
     content = TextField(max_length=16384)
-    created_on = DateTimeField(auto_now=False, auto_now_add=True)
+    created_on = DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.pk}: {self.title[:15]}..."
 
 
 class Report(Model):
-    created_on = DateField(auto_now=False, auto_now_add=True)
+    created_on = DateField(auto_now_add=True)
     first_name = CharField(max_length=30)
-    middle_name = CharField(max_length=30)
-    last_name = CharField(max_length=30)
+    middle_name = CharField(max_length=30, null=True)
+    last_name = CharField(max_length=30, null=True)
     points = PositiveSmallIntegerField()
     grade = PositiveSmallIntegerField(
         choices=[(5, 5), (6, 6), (7, 7), (8, 8)],
