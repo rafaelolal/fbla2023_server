@@ -43,7 +43,13 @@ def create_students():
            'YYW0xRkaT3QC3Ex550kpuuwlj5b2', '51moiXQZjAXp7mHpnUGzopnVI1Y2', ]
 
     for i, id in enumerate(ids):
-        Student(id=id, email=f"student{i}@test.com").save()
+        if i == 0:
+            Student(id=id, email=f"student{i}@test.com").save()
+
+        else:
+            Student(id=id, email=f"student{i}@test.com", first_name=f.first_name(), middle_name=f.first_name(
+            ), last_name=f.last_name(), grade=random.randint(5, 8), biography=f.paragraph(nb_sentences=3, variable_nb_sentences=False),
+            ).save()
 
 
 def create_events(n=10):
@@ -123,6 +129,7 @@ def create_or_update_leaderboard():
     if len(Leaderboard.objects.all()) == 0:
         print("Created leaderboard")
         Leaderboard().save()
+
     students = Student.objects.all().order_by('-live_points')
     for i, student in enumerate(students, 1):
         student.rank = i
