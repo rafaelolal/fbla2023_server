@@ -14,8 +14,9 @@ def report_create_view(request):
     students = Student.objects.all()
     today = date.today()
     for student in students:
-        Report(created_on=today, first_name=student.first_name or student.email, middle_name=student.middle_name,
-               last_name=student.last_name, points=student.live_points, grade=student.grade).save()
+        report = Report(created_on=today, first_name=student.first_name or student.email, middle_name=student.middle_name,
+                        last_name=student.last_name, points=student.live_points, grade=student.grade)
+        report.save()
         student.live_points = 0
         student.points = 0
         student.rank = None
@@ -30,7 +31,7 @@ def report_create_view(request):
         attendance.final = True
         attendance.save()
 
-    return Response(status=status.HTTP_201_CREATED)
+    return Response(data=ReportListSerializer(report).data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])

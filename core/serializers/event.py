@@ -9,7 +9,7 @@ class EventCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['title', 'description', 'type', 'location', 'starts_on',
-                  'finishes_on', 'image', 'points', 'cancellation_reason']
+                  'finishes_on', 'image', 'points', 'cancelation_reason']
 
 
 class EventListSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class EventListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['pk', 'title', 'description', 'type', 'location', 'starts_on',
-                  'finishes_on', 'image', 'points', 'cancellation_reason']
+                  'finishes_on', 'image', 'points', 'cancelation_reason']
 
 
 class EventDashboardListSerializer(serializers.ModelSerializer):
@@ -27,7 +27,7 @@ class EventDashboardListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['pk', 'title', 'type', 'location', 'starts_on',
-                  'finishes_on', 'cancellation_reason', 'participants']
+                  'finishes_on', 'cancelation_reason', 'participants']
 
 
 class EventProfileSerializer(serializers.ModelSerializer):
@@ -35,14 +35,14 @@ class EventProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['pk', 'title', 'location', 'starts_on',
-                  'finishes_on', 'cancellation_reason']
+                  'finishes_on', 'cancelation_reason']
 
 
 class EventCancelUpdateSerializer(serializers.ModelSerializer):
     """Used by Event cancel update view."""
     class Meta:
         model = Event
-        fields = ['cancellation_reason']
+        fields = ['cancelation_reason']
 
 
 class EventDestroySerializer(serializers.ModelSerializer):

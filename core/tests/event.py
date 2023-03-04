@@ -65,7 +65,7 @@ class EventAPITestCase(APITestCase):
                                      location='Test Location', starts_on=datetime.now(tz=timezone.utc),
                                      finishes_on=datetime.now(tz=timezone.utc), points=10)
         url = reverse('event-cancel', kwargs={'pk': event.pk})
-        data = {'cancellation_reason': 'Test reason'}
+        data = {'cancelation_reason': 'Test reason'}
         serializer = EventCancelUpdateSerializer(instance=event, data=data)
         self.assertTrue(serializer.is_valid())
         response = self.client.patch(url, data)

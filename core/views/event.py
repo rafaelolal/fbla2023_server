@@ -33,7 +33,7 @@ class EventDashboardListView(ListAPIView):
 
 
 class EventCancelUpdateView(UpdateAPIView):
-    """Updates an Event for cancellation."""
+    """Updates an Event for cancelation."""
     queryset = Event.objects.all()
     serializer_class = EventCancelUpdateSerializer
 

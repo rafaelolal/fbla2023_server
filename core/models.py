@@ -48,11 +48,11 @@ class Event(Model):
     finishes_on = DateTimeField(auto_now=False, auto_now_add=False)
     image = CharField(max_length=36)
     points = PositiveSmallIntegerField()
-    cancellation_reason = TextField(max_length=1024, blank=True, null=True)
+    cancelation_reason = TextField(max_length=1024, blank=True, null=True)
 
     def __str__(self):
         s = f"{self.pk}: "
-        s += 'Canceled' if self.cancellation_reason else ''
+        s += 'Canceled' if self.cancelation_reason else ''
         s += f"{self.title[:15]}..."
         return s
 

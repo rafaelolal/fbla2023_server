@@ -22,7 +22,7 @@ class EventProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['pk', 'title', 'location', 'starts_on',
-                  'finishes_on', 'cancellation_reason']
+                  'finishes_on', 'cancelation_reason']
 
 
 class AttendanceProfileListSerializer(serializers.ModelSerializer):
