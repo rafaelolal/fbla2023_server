@@ -35,7 +35,7 @@ class StudentRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ['pk', 'first_name', 'middle_name', 'last_name',
-                  'biography', 'grade', 'image', 'events', 'prizes']
+                  'biography', 'grade', 'image', 'events', 'prizes', 'points', 'rank']
 
     def get_prizes(self, obj):
         prizes = []
