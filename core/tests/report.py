@@ -46,20 +46,21 @@ class ReportAPITestCase(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        expected_data = [{'created_on': '2023-02-24'},
-                         {'created_on': '2023-02-25'}]
+        expected_data = [{'created_on': '2023-02-25'},
+                         {'created_on': '2023-02-24'}]
+
         self.assertEqual(response.data, expected_data)
 
     def test_report_retrieve_view(self):
-        student1 = Student.objects.create(id='123', email='test1@test.com', first_name='John',
-                                          middle_name='M', last_name='Doe', biography='Test biography',
-                                          grade=5, live_points=234, points=432, rank=1)
-        student2 = Student.objects.create(id='1234', email='test2@test.com', first_name='Johnny',
-                                          middle_name='M', last_name='Doe', biography='Test biography',
-                                          grade=6, live_points=2314, points=1234, rank=2)
-        student3 = Student.objects.create(id='1245', email='test3@test.com', first_name='Jane',
+        student1 = Student.objects.create(id='1245', email='test3@test.com', first_name='Jane',
                                           middle_name='M', last_name='Doe', biography='Test biography',
                                           grade=7, live_points=4123, points=12311, rank=3)
+        student2 = Student.objects.create(id='123', email='test1@test.com', first_name='John',
+                                          middle_name='M', last_name='Doe', biography='Test biography',
+                                          grade=5, live_points=234, points=432, rank=1)
+        student3 = Student.objects.create(id='1234', email='test2@test.com', first_name='Johnny',
+                                          middle_name='M', last_name='Doe', biography='Test biography',
+                                          grade=6, live_points=2314, points=1234, rank=2)
         report1 = Report.objects.create(created_on='2023-02-25', first_name=student1.first_name, middle_name=student1.middle_name,
                                         last_name=student1.last_name, points=student1.live_points, grade=student1.grade)
         report2 = Report.objects.create(created_on='2023-02-25', first_name=student2.first_name, middle_name=student2.middle_name,
