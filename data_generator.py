@@ -149,7 +149,10 @@ def create_reports(n=5):
     for d in range(n):
         created_on = datetime.date.today() - datetime.timedelta(days=d*5)
         for student in Student.objects.all():
-            report = Report(first_name=student.email,
+            report = Report(first_name=student.first_name or student.email,
+                            middle_name=student.middle_name or None,
+                            last_name=student.last_name or None,
+                            grade=student.grade or None,
                             points=random.randint(0, 100))
             report.save()
             report.created_on = created_on
