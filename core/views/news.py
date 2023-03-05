@@ -15,6 +15,9 @@ class NewsListView(ListAPIView):
     queryset = News.objects.all()
     serializer_class = NewsListSerializer
 
+    def get_queryset(self):
+        return News.objects.all().order_by('-created_on')
+
 
 class NewsRetrieveView(RetrieveAPIView):
     """Retrieves a News."""
