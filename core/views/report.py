@@ -38,7 +38,8 @@ def report_create_view(request):
 def report_list_view(request):
     """Gets all the dates that Reports were created on."""
 
-    created_ons = Report.objects.values('created_on').distinct()
+    created_ons = Report.objects.order_by(
+        '-created_on').values('created_on').distinct()
     serializer = ReportListSerializer(created_ons, many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
