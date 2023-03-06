@@ -26,11 +26,6 @@ class StudentRallyListView(ListAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentRallyListSerializer
 
-    def get_queryset(self):
-        objs = Student.objects.all()
-        shuffle(objs)
-        return objs
-
 
 class StudentLeaderboardListView(ListAPIView):
     """Lists Students for use in the leaderboard."""
