@@ -50,6 +50,8 @@ urlpatterns = [
     path('students/', StudentListView.as_view(), name='student-list'),
     path('students/leaderboard/', StudentLeaderboardListView.as_view(),
          name='student-leaderboard-list'),
+    path('students/rally/', StudentRallyListView.as_view(),
+         name='student-rally-list'),
     path('student/<str:pk>/', StudentRetrieveView.as_view(),
          name='student-retrieve'),
     path('student/<str:pk>/events/', StudentEventListView.as_view(),

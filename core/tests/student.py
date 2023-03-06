@@ -7,7 +7,7 @@ from ..models import Attendance, Event, Student, Prize
 from ..serializers.student import (StudentCreateSerializer, StudentListSerializer,
                                    StudentLeaderboardListSerializer,
                                    StudentRetrieveSerializer, StudentEventListSerializer,
-                                   StudentUpdateSerializer)
+                                   StudentRallyListSerializer)
 
 
 class StudentTestCase(APITestCase):
@@ -56,6 +56,24 @@ class StudentTestCase(APITestCase):
 
         url = reverse('student-leaderboard-list')
         serializer = StudentLeaderboardListSerializer([student], many=True)
+
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_rally_list_students(self):
+        student = Student.objects.create(
+            id='123',
+            email='test@example.com',
+            first_name='John',
+            middle_name='Doe',
+            last_name='Smith',
+            grade=5
+        )
+
+        url = reverse('student-rally-list')
+        serializer = StudentRallyListSerializer([student], many=True)
 
         response = self.client.get(url, format='json')
 

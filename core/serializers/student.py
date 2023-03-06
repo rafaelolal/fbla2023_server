@@ -56,6 +56,14 @@ class StudentEventListSerializer(serializers.ModelSerializer):
         return obj.events.values('pk', 'event')
 
 
+class StudentRallyListSerializer(serializers.ModelSerializer):
+    """Used by Student rally list view."""
+
+    class Meta:
+        model = Student
+        fields = ["pk", "first_name", 'last_name', 'middle_name']
+
+
 class StudentUpdateSerializer(serializers.ModelSerializer):
     """Used by Student update view."""
     class Meta:
