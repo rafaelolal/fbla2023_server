@@ -94,8 +94,10 @@ def create_news(n=5):
         content = ""
         for _ in range(random.randint(1, 5)):
             content += f"### {f.paragraph(nb_sentences=1, variable_nb_sentences=False)[:-1]}\n\n"
-            for _ in range(random.randint(2, 5)):
+            for i in range(random.randint(2, 5)):
                 content += f"{f.paragraph(nb_sentences=5)}\n\n"
+                content += random.choice(
+                    ["", "", "", "", f"![image{i}](https://picsum.photos/seed/{random.randint(10000, 99999)}/300)"]) + "\n\n"
         news = News(title=f.paragraph(nb_sentences=1,
                                       variable_nb_sentences=False)[:-1], content=content)
         news.save()
