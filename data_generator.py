@@ -52,7 +52,7 @@ def create_students():
             ).save()
 
 
-def create_events(n=10):
+def create_events(n=30):
     types = ['Competition', 'Show', 'Fundraiser', 'Trip', 'Fair']
     locations = ['Auditorium', 'Gymnasium',
                  'Outdoor Court', 'Cafeteria', 'Main Field']
