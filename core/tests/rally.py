@@ -11,7 +11,7 @@ class RallyTests(APITestCase):
     def test_retrieve_student(self):
         rally = Rally.objects.create(starts_on=datetime.now(tz=timezone.utc))
 
-        url = reverse('rally-retrieve', kwargs={'pk': 1})
+        url = reverse('rally-retrieve', kwargs={'id': 1})
         serializer = RallySerializer(rally)
 
         response = self.client.get(url, format='json')
@@ -23,7 +23,7 @@ class RallyTests(APITestCase):
         rally = Rally.objects.create(starts_on=now)
 
         new_starts_on = now + timedelta(hours=1)
-        url = reverse('rally-update', kwargs={'pk': rally.id})
+        url = reverse('rally-update', kwargs={'id': rally.id})
         data = {'starts_on': new_starts_on}
         response = self.client.put(url, data, format='json')
 

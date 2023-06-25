@@ -23,9 +23,11 @@ class NewsRetrieveView(RetrieveAPIView):
     """Retrieves a News."""
     queryset = News.objects.all()
     serializer_class = NewsRetrieveSerializer
+    lookup_field = 'id'
 
 
 class NewsDestroyView(DestroyAPIView):
     """Destroys a News."""
     queryset = News.objects.all()
     serializer_class = NewsDestroySerializer
+    lookup_field = 'id'

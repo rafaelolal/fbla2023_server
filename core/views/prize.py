@@ -17,6 +17,6 @@ class PrizeListView(ListAPIView):
 
     def get_queryset(self):
         student = Student.objects.get(
-            pk=self.kwargs.get('student'))
+            id=self.kwargs.get('student'))
         queryset = Prize.objects.all().filter(student=student)
         return queryset

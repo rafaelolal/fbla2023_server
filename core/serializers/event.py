@@ -16,7 +16,7 @@ class EventListSerializer(serializers.ModelSerializer):
     """Used by Event list view."""
     class Meta:
         model = Event
-        fields = ['pk', 'title', 'description', 'type', 'location', 'starts_on',
+        fields = ['id', 'title', 'description', 'type', 'location', 'starts_on',
                   'finishes_on', 'image', 'points', 'cancelation_reason']
 
 
@@ -26,7 +26,7 @@ class EventDashboardListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ['pk', 'title', 'type', 'location', 'starts_on',
+        fields = ['id', 'title', 'type', 'location', 'starts_on',
                   'finishes_on', 'cancelation_reason', 'participants']
 
 
@@ -34,7 +34,7 @@ class EventProfileSerializer(serializers.ModelSerializer):
     """Used by Attendance profile list serializer."""
     class Meta:
         model = Event
-        fields = ['pk', 'title', 'location', 'starts_on',
+        fields = ['id', 'title', 'location', 'starts_on',
                   'finishes_on', 'cancelation_reason']
 
 

@@ -50,7 +50,7 @@ class StudentTestCase(APITestCase):
             first_name='John',
             middle_name='Doe',
             last_name='Smith',
-            points=100,
+            current_points=100,
             rank=1
         )
 
@@ -97,7 +97,7 @@ class StudentTestCase(APITestCase):
         Prize.objects.create(student=student, type="Food")
         student.refresh_from_db()
 
-        url = reverse('student-retrieve', kwargs={'pk': student.pk})
+        url = reverse('student-retrieve', kwargs={'id': student.id})
         serializer = StudentRetrieveSerializer(student)
 
         response = self.client.get(url, format='json')
@@ -105,14 +105,14 @@ class StudentTestCase(APITestCase):
         self.assertEqual(response.data, serializer.data)
 
     def test_list_student_events(self):
-        event1 = Event.objects.create(pk=100, title='Test Event', description='Test Description', type='Competition',
+        event1 = Event.objects.create(id=100, title='Test Event', description='Test Description', type='Competition',
                                       location='Test Location', starts_on=datetime.now(tz=timezone.utc), finishes_on=datetime.now(tz=timezone.utc),
                                       points=10)
-        event2 = Event.objects.create(pk=101, title='Test Event 2', description='Test Description', type='Competition',
+        event2 = Event.objects.create(id=101, title='Test Event 2', description='Test Description', type='Competition',
                                       location='Test Location', starts_on=datetime.now(tz=timezone.utc), finishes_on=datetime.now(tz=timezone.utc),
                                       points=10)
         student = Student.objects.create(
-            pk='123',
+            id='123',
             email='test@example.com',
         )
         Attendance.objects.create(student=student, event=event1)
@@ -120,7 +120,7 @@ class StudentTestCase(APITestCase):
 
         student.refresh_from_db()
 
-        url = reverse('student-events-list', kwargs={'pk': student.pk})
+        url = reverse('student-events-list', kwargs={'id': student.id})
 
         response = self.client.get(url, format='json')
         serializer = StudentEventListSerializer(student)
@@ -144,7 +144,7 @@ class StudentTestCase(APITestCase):
             'image': 'https://image_url.jpg'
         }
 
-        url = reverse('student-update', kwargs={'pk': student.pk})
+        url = reverse('student-update', kwargs={'id': student.id})
         response = self.client.put(url, updated_data, format='multipart')
 
         # response.data contains the URL while updated_data contains the file object
@@ -159,8 +159,8 @@ class StudentTestCase(APITestCase):
             id='1',
             email='testemail@example.com')
 
-        url = reverse('student-destroy', kwargs={'pk': student.pk})
+        url = reverse('student-destroy', kwargs={'id': student.id})
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(Student.objects.filter(pk=student.pk).exists())
+        self.assertFalse(Student.objects.filter(id=student.id).exists())

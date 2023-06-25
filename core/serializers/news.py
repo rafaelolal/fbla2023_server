@@ -14,7 +14,7 @@ class NewsListSerializer(serializers.ModelSerializer):
     """Used by News list view."""
     class Meta:
         model = News
-        fields = ['pk', 'title', 'created_on']
+        fields = ['id', 'title', 'created_on']
 
 
 class NewsRetrieveSerializer(serializers.ModelSerializer):

@@ -9,9 +9,9 @@ from ..serializers.report import ReportSerializer, ReportListSerializer
 
 @api_view(['POST'])
 def report_create_view(request):
-    """Creates a Report, resets students' points and rank, and marks all attendances as final."""
+    """Creates a Report, resets students' current_points and rank, and marks all attendances as final."""
 
-    students = Student.objects.all().order_by('-live_points')
+    students = Student.objects.all().order_by('-balance')
     today = date.today()
     for i, student in enumerate(students):
         if i in [0, 1,  2]:
@@ -19,14 +19,14 @@ def report_create_view(request):
             Prize(student=student, type=prizes[i]).save()
 
         report = Report(created_on=today, first_name=student.first_name or student.email, middle_name=student.middle_name,
-                        last_name=student.last_name, points=student.live_points, grade=student.grade)
+                        last_name=student.last_name, points=student.balance, grade=student.grade)
         report.save()
-        student.live_points = 0
-        student.points = 0
+        student.balance = 0
+        student.current_points = 0
         student.rank = None
         student.save()
 
-    leaderboard = Leaderboard.objects.get(pk=1)
+    leaderboard = Leaderboard.objects.get(id=1)
     leaderboard.created_on = date.today()
     leaderboard.save()
 

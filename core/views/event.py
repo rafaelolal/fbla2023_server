@@ -36,9 +36,11 @@ class EventCancelUpdateView(UpdateAPIView):
     """Updates an Event for cancelation."""
     queryset = Event.objects.all()
     serializer_class = EventCancelUpdateSerializer
+    lookup_field = 'id'
 
 
 class EventDestroyView(DestroyAPIView):
     """Destroy an Event."""
     queryset = Event.objects.all()
     serializer_class = EventDestroySerializer
+    lookup_field = 'id'

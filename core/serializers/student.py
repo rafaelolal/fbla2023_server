@@ -15,7 +15,7 @@ class StudentListSerializer(serializers.ModelSerializer):
     """Used by Student list view."""
     class Meta:
         model = Student
-        fields = ['pk', 'email', 'first_name',
+        fields = ['id', 'email', 'first_name',
                   'middle_name', 'last_name', 'grade']
 
 
@@ -24,7 +24,7 @@ class StudentLeaderboardListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ['email', 'image', 'first_name', 'middle_name',
-                  'last_name', 'points', 'rank']
+                  'last_name', 'current_points', 'rank']
 
 
 class StudentRetrieveSerializer(serializers.ModelSerializer):
@@ -34,8 +34,8 @@ class StudentRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ['pk', 'first_name', 'middle_name', 'last_name',
-                  'biography', 'grade', 'image', 'events', 'prizes', 'points', 'rank']
+        fields = ['id', 'first_name', 'middle_name', 'last_name',
+                  'biography', 'grade', 'image', 'events', 'prizes', 'current_points', 'rank']
 
     def get_prizes(self, obj):
         prizes = []
@@ -53,7 +53,7 @@ class StudentEventListSerializer(serializers.ModelSerializer):
         fields = ["attendances"]
 
     def get_attendances(self, obj):
-        return obj.events.values('pk', 'event')
+        return obj.events.values('id', 'event')
 
 
 class StudentRallyListSerializer(serializers.ModelSerializer):
@@ -61,7 +61,7 @@ class StudentRallyListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ["pk", "first_name", 'last_name', 'middle_name']
+        fields = ['id', "first_name", 'last_name', 'middle_name']
 
 
 class StudentUpdateSerializer(serializers.ModelSerializer):

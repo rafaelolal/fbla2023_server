@@ -8,9 +8,11 @@ class RallyRetrieveView(RetrieveAPIView):
     """Retrieves a Rally."""
     queryset = Rally.objects.all()
     serializer_class = RallySerializer
+    lookup_field = 'id'
 
 
 class RallyUpdateView(UpdateAPIView):
     """Updates the Rally's start date and time."""
     queryset = Rally.objects.all()
     serializer_class = RallySerializer
+    lookup_field = 'id'

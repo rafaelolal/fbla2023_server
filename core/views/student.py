@@ -33,28 +33,32 @@ class StudentLeaderboardListView(ListAPIView):
     serializer_class = StudentLeaderboardListSerializer
 
     def get_queryset(self):
-        return Student.objects.all().order_by('-points')
+        return Student.objects.all().order_by('-current_points')
 
 
 class StudentRetrieveView(RetrieveAPIView):
     """Retrieves a Student."""
     queryset = Student.objects.all()
     serializer_class = StudentRetrieveSerializer
+    lookup_field = 'id'
 
 
 class StudentEventListView(RetrieveAPIView):
     """Lists Student events."""
     queryset = Student.objects.all()
     serializer_class = StudentEventListSerializer
+    lookup_field = 'id'
 
 
 class StudentUpdateView(UpdateAPIView):
     """Updates a Student."""
     queryset = Student.objects.all()
     serializer_class = StudentUpdateSerializer
+    lookup_field = 'id'
 
 
 class StudentDestroyView(DestroyAPIView):
     """Destroys a Student."""
     queryset = Student.objects.all()
     serializer_class = StudentDestroySerializer
+    lookup_field = 'id'

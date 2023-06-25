@@ -9,17 +9,19 @@ class LeaderboardRetrieveView(RetrieveAPIView):
     """Retrieves a Leaderboard."""
     queryset = Leaderboard.objects.all()
     serializer_class = LeaderboardRetrieveSerializer
+    lookup_field = 'id'
 
 
 class LeaderboardUpdateView(UpdateAPIView):
     """Updates the Leaderboard creation date and recalculates students' ranks."""
     queryset = Leaderboard.objects.all()
     serializer_class = LeaderboardUpdateSerializer
+    lookup_field = 'id'
 
     def put(self, request, *args, **kwargs):
         response = super().put(request, *args, **kwargs)
 
-        students = Student.objects.all().order_by('-live_points')
+        students = Student.objects.all().order_by('-balance')
         # removing student ranks to avoid unique constraint error
         for student in students:
             student.rank = None
@@ -27,7 +29,7 @@ class LeaderboardUpdateView(UpdateAPIView):
 
         for i, student in enumerate(students, 1):
             student.rank = i
-            student.points = student.live_points
+            student.current_points = student.balance
             student.save()
 
         # cannot save in the above loop because

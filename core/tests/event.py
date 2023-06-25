@@ -64,7 +64,7 @@ class EventAPITestCase(APITestCase):
         event = Event.objects.create(title='Test Event', description='Test Description', type='Competition',
                                      location='Test Location', starts_on=datetime.now(tz=timezone.utc),
                                      finishes_on=datetime.now(tz=timezone.utc), points=10)
-        url = reverse('event-cancel', kwargs={'pk': event.pk})
+        url = reverse('event-cancel', kwargs={'id': event.id})
         data = {'cancelation_reason': 'Test reason'}
         serializer = EventCancelUpdateSerializer(instance=event, data=data)
         self.assertTrue(serializer.is_valid())
@@ -76,7 +76,7 @@ class EventAPITestCase(APITestCase):
         event = Event.objects.create(title='Test Event', description='Test Description', type='Competition',
                                      location='Test Location', starts_on=datetime.now(tz=timezone.utc), finishes_on=datetime.now(tz=timezone.utc),
                                      points=10)
-        url = reverse('event-destroy', kwargs={'pk': event.pk})
+        url = reverse('event-destroy', kwargs={'id': event.id})
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(Event.objects.filter(pk=event.pk).exists())
+        self.assertFalse(Event.objects.filter(id=event.id).exists())

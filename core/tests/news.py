@@ -39,7 +39,7 @@ class NewsAPITestCase(APITestCase):
     def test_retrieve_news(self):
         news = News.objects.create(
             title='Test News', content='This is a test news')
-        url = reverse('news-retrieve', kwargs={'pk': news.pk})
+        url = reverse('news-retrieve', kwargs={'id': news.id})
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -50,9 +50,9 @@ class NewsAPITestCase(APITestCase):
     def test_destroy_news(self):
         news = News.objects.create(
             title='Test News', content='This is a test news')
-        url = reverse('news-destroy', kwargs={'pk': news.pk})
+        url = reverse('news-destroy', kwargs={'id': news.id})
 
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
 
-        self.assertFalse(News.objects.filter(pk=news.pk).exists())
+        self.assertFalse(News.objects.filter(id=news.id).exists())

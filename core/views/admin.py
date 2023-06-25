@@ -14,3 +14,4 @@ class AdminRetrieveView(RetrieveAPIView):
     """Retrieves an Admin."""
     queryset = Admin.objects.all()
     serializer_class = AdminSerializer
+    lookup_field = 'id'

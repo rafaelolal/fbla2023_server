@@ -36,12 +36,17 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
 
+GRAPHENE = {
+    "SCHEMA": "core.schema.schema"
+}
+
 # Application definition
 
 INSTALLED_APPS = [
     'core',
     'rest_framework',
     'corsheaders',
+    'graphene_django',
     'drf_yasg',
     'django_extensions',
     'django_archive',

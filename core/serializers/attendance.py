@@ -21,8 +21,8 @@ class EventProfileSerializer(serializers.ModelSerializer):
     """Used by Attendance profile list serializer."""
     class Meta:
         model = Event
-        fields = ['pk', 'title', 'location', 'starts_on',
-                  'finishes_on', 'cancelation_reason']
+        fields = ['id', 'title', 'location', 'starts_on',
+                  'finishes_on', 'cancelation_reason', 'type']
 
 
 class AttendanceProfileListSerializer(serializers.ModelSerializer):
@@ -47,7 +47,7 @@ class AttendanceDashboardListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Attendance
-        fields = ['pk', 'student', 'event', 'attended',
+        fields = ['id', 'student', 'event', 'attended',
                   'final', 'student_name']
 
     def get_student_name(self, obj):
