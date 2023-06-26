@@ -12,12 +12,14 @@ if True:
     from django import setup
     setup()
     from django.utils import timezone
-    from core.models import Student, Event, Attendance, News, Prize, Leaderboard, Rally, Report, Admin
+    from core.models import Student, Event, EventFeedback, Attendance, News, Prize, PrizeRedemption, Parent, Group, GroupEvent, GroupMember, GroupAnnouncement, Report, Leaderboard, Rally, Admin, AdminAnnouncement
 
 
 def create_all():
-    create_functions = [create_students, create_events, create_attendance,
-                        create_news, create_prizes, create_or_update_leaderboard,
+    # feedbacks must be after attendances
+    create_functions = [create_admin_announcements, create_students, create_events, create_attendance,
+                        create_event_feedbacks, create_news, create_prizes, create_prize_redemptions,
+                        create_parents, create_groups, create_or_update_leaderboard,
                         create_or_update_rally, create_reports, create_admin]
 
     print("Started creating")
@@ -28,19 +30,25 @@ def create_all():
 
 def delete_all_objects():
     print("Started deleting all objects")
-    models = [Student, Event, Attendance, News, Prize, Report]
+    models = [Student, Event, EventFeedback, Attendance, News, Prize, PrizeRedemption,
+              Parent, Group, GroupEvent, GroupMember, GroupAnnouncement, Report, AdminAnnouncement]
     for model in models:
         model.objects.all().delete()
     print("Finished deleting all objects")
 
 
+def create_admin_announcements(n=5):
+    for _ in range(n):
+        AdminAnnouncement(title=f.paragraph(nb_sentences=1, variable_nb_sentences=False), content=f.paragraph(nb_sentences=3, variable_nb_sentences=False), created_on=datetime.datetime.now(
+            tz=timezone.utc), expires_on=datetime.datetime.now(
+            tz=timezone.utc) + datetime.timedelta(hours=random.randint(1, 96))).save()
+
+
 def create_students():
     # ids must be in this specific order
-    ids = ['oGPpPEUloOQRgC5c93H7u3dlwBw2', 'EPJsyOiPOMPJH7uy90BFUWfICCB2',
-           'P3g0EkZZfiR6dfW7aMnxV4blQ8s2', 'wODmBVP1OuUATwyhzdwk5Xtjt9K2',
-           'vr5et02dk2STp0J6zpE30cPUFkV2', 'mklzxlsecIcdxmAHSXcndSsCy213',
-           'J4JMWTKwS9dmM2ulDlYmn0o9gJN2', 'h8z5G0FgnyX6Zn2sMQNv7IgczI92',
-           'YYW0xRkaT3QC3Ex550kpuuwlj5b2', '51moiXQZjAXp7mHpnUGzopnVI1Y2', ]
+    ids = ['OKHufehFqpb0pvkAmlRqA3KWcyF3', 'AQYWFdX0HDXYA2kD1IDjp6Ycr6B3',
+           '48Z13hlv0sg5TDoCyuzlA2XHJ9n2', 'IZmJYyIJ3raqSMbSkkWuY6zRVEF2',
+           'c9H2ZfvcA2Z2OMqfhZzclx32PuI2',]
 
     for i, id in enumerate(ids):
         if i == 0:
@@ -77,12 +85,20 @@ def create_events(n=30):
               points=random.randint(50, 100)).save()
 
 
+def create_event_feedbacks():
+    for student in Student.objects.all():
+        for event in student.events.all():
+            if event.attended:
+                EventFeedback(student=student, event=event.event, rating=random.randint(
+                    1, 5), content=f.paragraph(nb_sentences=3, variable_nb_sentences=False)).save()
+
+
 def create_attendance(n=5):
     for student in Student.objects.all():
         events = random.sample(
-            [e.pk for e in Event.objects.all()], random.randint(1, n))
+            [e.id for e in Event.objects.all()], random.randint(1, n))
         for event in events:
-            event_object = Event.objects.get(pk=event)
+            event_object = Event.objects.get(id=event)
             attended = random.choice(
                 (True, False)) if event_object.finishes_on < datetime.datetime.now(tz=timezone.utc) else None
             Attendance(student=student, event=event_object,
@@ -106,11 +122,61 @@ def create_news(n=5):
         news.save()
 
 
-def create_prizes(n=5):
+def create_prizes(n=6):
     types = ['School', 'Food', 'Spirit']
+    for i in range(random.randint(1, n)):
+        Prize(name=f"Prize {i}",
+              type=random.choice(types),
+              cost=random.randint(10, 100)).save()
+
+
+def create_prize_redemptions(n=3):
     for student in Student.objects.all():
-        for _ in range(random.randint(1, n)):
-            Prize(type=random.choice(types), student=student).save()
+        while True:
+            prize = random.choice(Prize.objects.all())
+            if student.balance < prize.cost:
+                break
+
+            student.balance -= prize.cost
+            PrizeRedemption(prize=prize, student=student, redeemed_on=datetime.datetime.now(
+                tz=timezone.utc) - datetime.timedelta(days=random.randint(1, 4)), is_approved=random.choice([True, False])).save()
+
+
+def create_parents():
+    # ids must be in this order
+    ids = ['a3zVrpnuAUbfudBYERveSLNT16R2',
+           'XwUDHI0SbscijUNj3fcRLLNr3aL2', 'CwzKpzGeFdMXu1KSaBua9IWjvRW2']
+    for i, id in enumerate(ids):
+        parent = Parent(id=id, email=f"parent{i}@test.com", first_name=f.first_name(
+        ), middle_name=f.first_name(), last_name=f.last_name())
+        parent.save()
+        for _ in range(random.randint(1, 3)):
+            student = random.choice(Student.objects.all())
+            if len(student.parents.all()) < 2:
+                parent.kids.add(student)
+
+
+def create_groups(n=3):
+    for _ in range(n):
+        group = Group(name=f.paragraph(nb_sentences=1, variable_nb_sentences=False), description=f.paragraph(
+            nb_sentences=3, variable_nb_sentences=False), is_private=random.choice([True, False]))
+
+        group.save()
+
+        for _ in range(3):
+            student = random.choice(Student.objects.all())
+            group.members.create(
+                member=student, is_admin=random.choice([True, False]))
+
+        for _ in range(5):
+            member = random.choice(group.members.all())
+            event = random.choice(Event.objects.all())
+            if event not in group.events.all():
+                group.events.create(event=event, added_by=member.member)
+
+        for _ in range(3):
+            group.announcements.create(created_by=random.choice(group.members.all()).member, created_on=datetime.datetime.now(
+                tz=timezone.utc), content=f.paragraph(nb_sentences=5))
 
 
 def create_or_update_rally():
@@ -127,23 +193,23 @@ def create_or_update_rally():
 
 
 def create_or_update_leaderboard():
-    calculate_live_points()
+    calculate_balance()
     if len(Leaderboard.objects.all()) == 0:
         print("Created leaderboard")
         Leaderboard().save()
 
-    students = Student.objects.all().order_by('-live_points')
+    students = Student.objects.all().order_by('-balance')
     for i, student in enumerate(students, 1):
         student.rank = i
-        student.points = student.live_points
+        student.current_points = student.balance
         student.save()
 
 
-def calculate_live_points():
+def calculate_balance():
     for student in Student.objects.all():
         for attendance in student.events.all():
             if attendance.attended:
-                student.live_points += attendance.event.points
+                student.balance += attendance.event.points
         student.save()
 
 
@@ -164,7 +230,7 @@ def create_reports(n=5):
 def create_admin():
     if len(Admin.objects.all()) == 0:
         print("Created admin")
-        Admin(pk="ubdAzZeNbHca1S1Gaeq0iKOGwuv1")
+        Admin(id="ubdAzZeNbHca1S1Gaeq0iKOGwuv1")
 
 
 f = Faker('en_US')

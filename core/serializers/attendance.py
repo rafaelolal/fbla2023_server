@@ -51,10 +51,7 @@ class AttendanceDashboardListSerializer(serializers.ModelSerializer):
                   'final', 'student_name']
 
     def get_student_name(self, obj):
-        if all([obj.student.first_name, obj.student.middle_name, obj.student.last_name]):
-            return f"{obj.student.first_name} {obj.student.middle_name} {obj.student.last_name}"
-        else:
-            return f"{obj.student.email}"
+        return obj.student.get_name()
 
 
 class AttendanceDestroySerializer(serializers.ModelSerializer):
