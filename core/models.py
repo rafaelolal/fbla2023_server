@@ -140,8 +140,7 @@ class PrizeRedemption(Model):
     student = ForeignKey(
         Student, related_name="redemptions", on_delete=CASCADE)
     redeemed_on = DateTimeField(auto_now_add=True)
-    approved_on = DateTimeField(
-        auto_now=False, auto_now_add=False, blank=True, null=True)
+    is_approved = BooleanField(default=False)
 
     def __str__(self):
         return f"{self.id}: {self.student.get_name()}'s {self.prize.name[:15]}..."
@@ -153,7 +152,7 @@ class Parent(Model):
     first_name = CharField(max_length=30, blank=True, null=True)
     middle_name = CharField(max_length=30, blank=True, null=True)
     last_name = CharField(max_length=30, blank=True, null=True)
-    kids = ManyToManyField(Student)
+    kids = ManyToManyField(Student, related_name="parents")
 
     def get_name(self):
         if all([self.first_name, self.middle_name, self.last_name]):
@@ -162,7 +161,7 @@ class Parent(Model):
             return f"{self.email}"
 
     def __str__(self):
-        return f"{self.id}: {self.get_name()} {len(self.kids)} kids"
+        return f"{self.id}: {self.get_name()} {len(self.kids.all())} kids"
 
 
 class Group(Model):

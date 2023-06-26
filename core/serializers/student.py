@@ -2,6 +2,8 @@
 from rest_framework import serializers
 from ..models import Student
 from ..serializers.attendance import AttendanceProfileListSerializer, AttendanceEventsListSerializer
+from ..serializers.group import GroupMemberListSerializer
+from ..serializers.prize_redemption import PrizeRedemptionProfileListSerializer
 
 
 class StudentCreateSerializer(serializers.ModelSerializer):
@@ -30,18 +32,15 @@ class StudentLeaderboardListSerializer(serializers.ModelSerializer):
 class StudentRetrieveSerializer(serializers.ModelSerializer):
     """Used by Student retrieve view."""
     events = AttendanceProfileListSerializer(many=True, read_only=True)
-    prizes = serializers.SerializerMethodField(read_only=True)
+    redemptions = PrizeRedemptionProfileListSerializer(
+        many=True, read_only=True)
+    groups = GroupMemberListSerializer(many=True, read_only=True)
 
     class Meta:
         model = Student
         fields = ['id', 'first_name', 'middle_name', 'last_name',
-                  'biography', 'grade', 'image', 'events', 'prizes', 'current_points', 'rank']
-
-    def get_prizes(self, obj):
-        prizes = []
-        for prize in obj.prizes.all():
-            prizes.append(prize.type)
-        return prizes
+                  'biography', 'grade', 'image', 'events', 'redemptions',
+                  'current_points', 'rank', 'groups']
 
 
 class StudentEventListSerializer(serializers.ModelSerializer):

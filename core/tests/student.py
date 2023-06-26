@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from ..models import Attendance, Event, Student, Prize
+from ..models import Attendance, Event, Student, Prize, PrizeRedemption, Group, GroupMember
 from ..serializers.student import (StudentCreateSerializer, StudentListSerializer,
                                    StudentLeaderboardListSerializer,
                                    StudentRetrieveSerializer, StudentEventListSerializer,
@@ -94,7 +94,14 @@ class StudentTestCase(APITestCase):
             grade=5
         )
         Attendance.objects.create(student=student, event=event)
-        Prize.objects.create(student=student, type="Food")
+        prize = Prize.objects.create(name="Prize 1", type="Food", cost=10)
+        PrizeRedemption.objects.create(
+            prize=prize, student=student, redeemed_on=datetime.now(tz=timezone.utc), approved_on=datetime.now(tz=timezone.utc) + timedelta(hours=1))
+        group = Group.objects.create(
+            name='Group Name', description='Group Description', is_private=True)
+        GroupMember.objects.create(
+            member=student, is_admin=True, group=group)
+
         student.refresh_from_db()
 
         url = reverse('student-retrieve', kwargs={'id': student.id})

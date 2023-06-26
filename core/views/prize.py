@@ -1,7 +1,7 @@
 """All Prize API views."""
 from rest_framework.generics import ListAPIView, CreateAPIView
 from ..serializers.prize import *
-from ..models import Prize, Student
+from ..models import Prize
 
 
 class PrizeCreateView(CreateAPIView):
@@ -14,9 +14,3 @@ class PrizeListView(ListAPIView):
     """Lists Prizes."""
     queryset = Prize.objects.all()
     serializer_class = PrizeSerializer
-
-    def get_queryset(self):
-        student = Student.objects.get(
-            id=self.kwargs.get('student'))
-        queryset = Prize.objects.all().filter(student=student)
-        return queryset

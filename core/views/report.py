@@ -14,10 +14,6 @@ def report_create_view(request):
     students = Student.objects.all().order_by('-balance')
     today = date.today()
     for i, student in enumerate(students):
-        if i in [0, 1,  2]:
-            prizes = ["Spirit", "School", "Food"]
-            Prize(student=student, type=prizes[i]).save()
-
         report = Report(created_on=today, first_name=student.first_name or student.email, middle_name=student.middle_name,
                         last_name=student.last_name, points=student.balance, grade=student.grade)
         report.save()

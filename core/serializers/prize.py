@@ -7,4 +7,4 @@ class PrizeSerializer(serializers.ModelSerializer):
     """Used by Prize create and list view."""
     class Meta:
         model = Prize
-        fields = ['type', 'student']
+        fields = ['name', 'type', 'cost']

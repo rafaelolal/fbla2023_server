@@ -38,7 +38,7 @@ urlpatterns = [
     path('news/<int:id>/destroy/', NewsDestroyView.as_view(), name='news-destroy'),
 
     path('prize/create/', PrizeCreateView.as_view(), name='prize-create'),
-    path('prizes/<str:student>/', PrizeListView.as_view(), name='prize-list'),
+    path('prizes/', PrizeListView.as_view(), name='prize-list'),
 
     path('rally/<int:id>/', RallyRetrieveView.as_view(), name='rally-retrieve'),
     path('rally/<int:id>/update/', RallyUpdateView.as_view(), name='rally-update'),
