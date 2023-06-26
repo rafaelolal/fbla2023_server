@@ -96,7 +96,7 @@ class StudentTestCase(APITestCase):
         Attendance.objects.create(student=student, event=event)
         prize = Prize.objects.create(name="Prize 1", type="Food", cost=10)
         PrizeRedemption.objects.create(
-            prize=prize, student=student, redeemed_on=datetime.now(tz=timezone.utc), approved_on=datetime.now(tz=timezone.utc) + timedelta(hours=1))
+            prize=prize, student=student, redeemed_on=datetime.now(tz=timezone.utc), is_approved=False)
         group = Group.objects.create(
             name='Group Name', description='Group Description', is_private=True)
         GroupMember.objects.create(

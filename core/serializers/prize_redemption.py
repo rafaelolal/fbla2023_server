@@ -11,7 +11,7 @@ class PrizeRedemptionProfileListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PrizeRedemption
-        fields = ['prize', 'redeemed_on', 'approved_on']
+        fields = ['prize', 'redeemed_on', 'is_approved']
 
 
 # class PrizeRedemptionDashboardListSerializer(serializers.ModelSerializer):
@@ -21,4 +21,4 @@ class PrizeRedemptionProfileListSerializer(serializers.ModelSerializer):
 
 #     class Meta:
 #         model = PrizeRedemption
-#         fields = ['prize', 'student', 'redeemed_on', 'approved_on']
+#         fields = ['prize', 'student', 'redeemed_on', 'is_approved']
