@@ -30,6 +30,9 @@ class NewsAPITestCase(APITestCase):
         news2 = News.objects.create(
             title='Test News 2', content='This is a test news 2')
 
+        news1.save()
+        news2.save()
+
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
