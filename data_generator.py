@@ -231,7 +231,7 @@ def create_reports(n=5):
 
 def create_admin():
     print("Created admin")
-    Admin(id="9KZ5hyYmkgPl74z1ngclkNhZ1T73")
+    Admin(id="9KZ5hyYmkgPl74z1ngclkNhZ1T73").save()
 
 
 f = Faker('en_US')
