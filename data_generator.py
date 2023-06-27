@@ -32,7 +32,7 @@ def create_all():
 def delete_all_objects():
     print("Started deleting all objects")
     models = [Student, Event, EventFeedback, Attendance, News, Prize, PrizeRedemption,
-              Parent, Group, GroupEvent, GroupMember, GroupAnnouncement, Report, AdminAnnouncement]
+              Parent, Group, GroupEvent, GroupMember, GroupAnnouncement, Report, AdminAnnouncement, Admin]
     for model in models:
         model.objects.all().delete()
     print("Finished deleting all objects")
@@ -230,9 +230,8 @@ def create_reports(n=5):
 
 
 def create_admin():
-    if len(Admin.objects.all()) == 0:
-        print("Created admin")
-        Admin(id="9KZ5hyYmkgPl74z1ngclkNhZ1T73")
+    print("Created admin")
+    Admin(id="9KZ5hyYmkgPl74z1ngclkNhZ1T73")
 
 
 f = Faker('en_US')
