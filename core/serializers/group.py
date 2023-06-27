@@ -7,7 +7,7 @@ class GroupSerializer(serializers.ModelSerializer):
     """Used by StudentRetrieve serializer and GraphQL."""
     class Meta:
         model = Group
-        fields = ['id', 'name', 'description', 'is_private']
+        fields = ['id', 'name', 'description', 'is_private', 'key']
 
 
 class GroupMemberListSerializer(serializers.ModelSerializer):

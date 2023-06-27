@@ -168,6 +168,7 @@ class Group(Model):
     name = CharField(max_length=256)
     description = TextField(max_length=1024)
     is_private = BooleanField()
+    key = TextField(max_length=6)
 
     def __str__(self):
         return f"{self.id}: {self.name} is private {self.is_private}"

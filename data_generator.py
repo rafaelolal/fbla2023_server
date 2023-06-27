@@ -161,7 +161,8 @@ def create_parents():
 def create_groups(n=3):
     for _ in range(n):
         group = Group(name=f.paragraph(nb_sentences=1, variable_nb_sentences=False), description=f.paragraph(
-            nb_sentences=3, variable_nb_sentences=False), is_private=random.choice([True, False]))
+            nb_sentences=3, variable_nb_sentences=False), is_private=random.choice([True, False]),
+            key="".join([random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ") for _ in range(6)]))
 
         group.save()
 
