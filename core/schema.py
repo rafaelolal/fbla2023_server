@@ -3,7 +3,7 @@ from rest_framework import serializers
 import graphene
 from graphene_django import DjangoObjectType
 from graphene_django.rest_framework.mutation import SerializerMutation
-from .models import Admin, AdminAnnouncement, Student, Event, EventFeedback, Attendance, News, Report, Rally, Leaderboard, Prize
+from .models import Admin, AdminAnnouncement, Group, GroupMember, GroupEvent, GroupAnnouncement, Student, Event, EventFeedback, Attendance, News, Report, Rally, Leaderboard, Prize
 from .serializers.admin import AdminAnnouncementSerializer
 from .serializers.event_feedback import EventFeedbackSerializer
 
@@ -65,6 +65,30 @@ class AdminType(DjangoObjectType):
         field = ("id")
 
 
+class GroupMemberType(DjangoObjectType):
+    class Meta:
+        model = GroupMember
+        field = ("member", 'is_admin', 'group')
+
+
+class GroupAnnouncementType(DjangoObjectType):
+    class Meta:
+        model = GroupAnnouncement
+        field = ('group', 'created_by', 'created_on', 'content')
+
+
+class GroupEventType(DjangoObjectType):
+    class Meta:
+        model = GroupEvent
+        field = ('group', 'event', 'added_by')
+
+
+class GroupType(DjangoObjectType):
+    class Meta:
+        model = Group
+        field = ("id", 'name', 'description', 'is_private',
+                 'key', 'members', 'events', 'announcements')
+
 #############################
 
 
@@ -103,6 +127,8 @@ class Query(graphene.ObjectType):
     list_admin_announcement = graphene.List(AdminAnnouncementType)
     list_events_by_type = graphene.List(
         EventType, type=graphene.String(), count=graphene.Int())
+    retrieve_group = graphene.Field(GroupType, id=graphene.String())
+    list_groups = graphene.List(GroupType)
 
     def resolve_retrieve_admin(root, info, id):
         return Admin.objects.get(id=id)
@@ -113,6 +139,12 @@ class Query(graphene.ObjectType):
     def resolve_list_events_by_type(root, info, type, count):
         return Event.objects.all().filter(
             type=type).order_by('-starts_on')[:count or None]
+
+    def resolve_retrieve_group(root, info, id):
+        return Group.objects.get(id=id)
+
+    def resolve_list_groups(root, info):
+        return Group.objects.all().filter(is_private=False)
 
 
 class Mutation(graphene.ObjectType):

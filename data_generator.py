@@ -166,8 +166,8 @@ def create_groups(n=3):
 
         group.save()
 
-        for _ in range(3):
-            student = random.choice(Student.objects.all())
+        students = random.shuffle(Student.objects.all())[:3]
+        for student in students:
             group.members.create(
                 member=student, is_admin=random.choice([True, False]))
 
