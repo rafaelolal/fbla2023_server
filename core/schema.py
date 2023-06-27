@@ -3,8 +3,9 @@ from rest_framework import serializers
 import graphene
 from graphene_django import DjangoObjectType
 from graphene_django.rest_framework.mutation import SerializerMutation
-from .models import Admin, AdminAnnouncement, Student, Event, Attendance, News, Report, Rally, Leaderboard, Prize
+from .models import Admin, AdminAnnouncement, Student, Event, EventFeedback, Attendance, News, Report, Rally, Leaderboard, Prize
 from .serializers.admin import AdminAnnouncementSerializer
+from .serializers.event_feedback import EventFeedbackSerializer
 
 
 class StudentType(DjangoObjectType):
@@ -66,16 +67,33 @@ class AdminType(DjangoObjectType):
 
 #############################
 
+
+class EventFeedbackType(DjangoObjectType):
+    class Meta:
+        model = EventFeedback
+        field = ('student', 'event', 'rating', 'content')
+
+
+class CreateEventFeedbackMutation(SerializerMutation):
+    class Meta:
+        serializer_class = EventFeedbackSerializer
+        return_field_name = 'eventFeedback'
+
+
+#############################
+
+
 class AdminAnnouncementType(DjangoObjectType):
     class Meta:
         model = AdminAnnouncement
-        field = ("title", "content", "created_on", "expires_on")
+        field = ('title', 'content', 'created_on', 'expires_on')
 
 
 class CreateAdminAnnouncementMutation(SerializerMutation):
     class Meta:
         serializer_class = AdminAnnouncementSerializer
         return_field_name = 'adminAnnouncement'
+
 
 #####################################
 
@@ -94,11 +112,12 @@ class Query(graphene.ObjectType):
 
     def resolve_list_events_by_type(root, info, type, count):
         return Event.objects.all().filter(
-            type=type).order_by('starts_on')[:count or None]
+            type=type).order_by('-starts_on')[:count or None]
 
 
 class Mutation(graphene.ObjectType):
     create_admin_announcement = CreateAdminAnnouncementMutation.Field()
+    create_event_feedback = CreateEventFeedbackMutation.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

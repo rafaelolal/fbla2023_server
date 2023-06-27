@@ -40,7 +40,7 @@ class StudentRetrieveSerializer(serializers.ModelSerializer):
         model = Student
         fields = ['id', 'first_name', 'middle_name', 'last_name',
                   'biography', 'grade', 'image', 'events', 'redemptions',
-                  'current_points', 'rank', 'groups']
+                  'current_points', 'balance', 'rank', 'groups']
 
 
 class StudentEventListSerializer(serializers.ModelSerializer):

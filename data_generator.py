@@ -17,10 +17,11 @@ if True:
 
 def create_all():
     # feedbacks must be after attendances
+    # leaderboard must come before redemptions because leaderboard calculates balance
     create_functions = [create_admin_announcements, create_students, create_events, create_attendance,
-                        create_event_feedbacks, create_news, create_prizes, create_prize_redemptions,
-                        create_parents, create_groups, create_or_update_leaderboard,
-                        create_or_update_rally, create_reports, create_admin]
+                        create_event_feedbacks, create_news, create_or_update_leaderboard, create_prizes,
+                        create_prize_redemptions, create_parents, create_groups, create_or_update_rally,
+                        create_reports, create_admin]
 
     print("Started creating")
     for fun in create_functions:
@@ -124,10 +125,10 @@ def create_news(n=5):
 
 def create_prizes(n=6):
     types = ['School', 'Food', 'Spirit']
-    for i in range(random.randint(1, n)):
+    for i in range(n):
         Prize(name=f"Prize {i}",
               type=random.choice(types),
-              cost=random.randint(10, 100)).save()
+              cost=random.randint(10, 30)).save()
 
 
 def create_prize_redemptions(n=3):
@@ -140,6 +141,7 @@ def create_prize_redemptions(n=3):
             student.balance -= prize.cost
             PrizeRedemption(prize=prize, student=student, redeemed_on=datetime.datetime.now(
                 tz=timezone.utc) - datetime.timedelta(days=random.randint(1, 4)), is_approved=random.choice([True, False])).save()
+            student.save()
 
 
 def create_parents():
