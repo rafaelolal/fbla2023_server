@@ -232,7 +232,7 @@ def create_reports(n=5):
 def create_admin():
     if len(Admin.objects.all()) == 0:
         print("Created admin")
-        Admin(id="ubdAzZeNbHca1S1Gaeq0iKOGwuv1")
+        Admin(id="9KZ5hyYmkgPl74z1ngclkNhZ1T73")
 
 
 f = Faker('en_US')
