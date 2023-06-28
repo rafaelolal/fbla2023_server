@@ -57,7 +57,7 @@ class Event(Model):
     location = CharField(max_length=64)
     starts_on = DateTimeField(auto_now=False, auto_now_add=False)
     finishes_on = DateTimeField(auto_now=False, auto_now_add=False)
-    image = CharField(max_length=36)
+    image = CharField(max_length=1024)
     points = PositiveSmallIntegerField()
     cancelation_reason = TextField(max_length=1024, blank=True, null=True)
 

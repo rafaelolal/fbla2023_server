@@ -219,8 +219,8 @@ def calculate_balance():
 
 
 def create_reports(n=5):
-    for d in range(n):
-        created_on = datetime.date.today() - datetime.timedelta(days=d*5)
+    for d in range(1, n):
+        created_on = datetime.date.today() - datetime.timedelta(days=d*30)
         for student in Student.objects.all():
             report = Report(first_name=student.first_name or student.email,
                             middle_name=student.middle_name or None,
